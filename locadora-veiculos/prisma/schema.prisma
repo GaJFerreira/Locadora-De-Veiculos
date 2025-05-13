@@ -32,6 +32,10 @@ model Veiculo {
   ano          Int
   cor          String
   placa        String       @unique
+  renavam       String      @unique
+  chasis       String       @unique
+  quilometragem Int
+  valorFipe   Float
   tipoVeiculo  TipoVeiculo
   locacoes     Locacao[]
 }
@@ -51,7 +55,7 @@ model Locacao {
   localDevolucao  String
   valorTotal      Float
   statusLocacao   StatusLocacao
-
+  pagamento       Pagamento?     
   usuario         Usuario        @relation(fields: [usuarioId], references: [id])
   veiculo         Veiculo        @relation(fields: [veiculoId], references: [id])
 }
@@ -61,3 +65,28 @@ enum StatusLocacao {
   FINALIZADA
   CANCELADA
 }
+model Pagamento {
+  id              Int            @id @default(autoincrement())
+  locacaoId       Int @unique
+  valor           Float
+  dataPagamento   DateTime
+  metodoPagamento MetodoPagamento
+  statusPagamento StatusPagamento
+
+  locacao         Locacao        @relation(fields: [locacaoId], references: [id])
+}
+
+enum MetodoPagamento {
+  CARTAO_CREDITO
+  CARTAO_DEBITO
+  DINHEIRO
+  TRANSFERENCIA
+} 
+
+enum StatusPagamento {
+  PENDENTE
+  PAGO
+  CANCELADO
+  FALHOU
+}
+
