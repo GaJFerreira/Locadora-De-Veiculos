@@ -32,10 +32,9 @@ model Veiculo {
   ano          Int
   cor          String
   placa        String       @unique
-  renavam       String      @unique
+  renavam      String       @unique
   chasis       String       @unique
-  quilometragem Int
-  valorFipe   Float
+  valorFipe    Float
   tipoVeiculo  TipoVeiculo
   locacoes     Locacao[]
 }

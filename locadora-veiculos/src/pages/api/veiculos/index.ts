@@ -27,6 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (veiculoExistente) {
                 return res.status(409).json({ error: 'Veículo já existe' });
             }
+
             const novoVeiculo = await prisma.veiculo.create({
                 data: {
                     modelo,
