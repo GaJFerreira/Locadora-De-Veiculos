@@ -34,6 +34,7 @@ model Veiculo {
   placa        String       @unique
   renavam      String       @unique
   chasis       String       @unique
+  quilometragem Int
   valorFipe    Float
   tipoVeiculo  TipoVeiculo
   locacoes     Locacao[]

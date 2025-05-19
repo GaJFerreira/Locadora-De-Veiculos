@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       const diaria = veiculo.valorFipe * 0.005
-      const valorTotal = parseFloat((veiculo.valorDiaria * dias).toFixed(2))
+      const valorTotal = parseFloat((diaria * dias).toFixed(2))
 
       const localDevolucao = req.body.localDevolucao || 'Local padrão';
       const localRetirada = req.body.localRetirada || 'Local padrão';
@@ -120,7 +120,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
   if (req.method === 'DELETE') {
-    const { id } = req.query
+    const { id } = req.body
     if (!id) {
       return res.status(400).json({ error: 'ID da locação é obrigatório' })
     }

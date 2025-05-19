@@ -42,6 +42,8 @@ CREATE TABLE `Locacao` (
     `veiculoId` INTEGER NOT NULL,
     `dataLocacao` DATETIME(3) NOT NULL,
     `dataDevolucao` DATETIME(3) NOT NULL,
+    `localRetirada` VARCHAR(191) NOT NULL,
+    `localDevolucao` VARCHAR(191) NOT NULL,
     `valorTotal` DOUBLE NOT NULL,
     `statusLocacao` ENUM('PENDENTE', 'FINALIZADA', 'CANCELADA') NOT NULL,
 

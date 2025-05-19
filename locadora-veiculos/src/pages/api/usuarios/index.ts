@@ -21,8 +21,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const usuarioExistente = await prisma.usuario.findUnique({
-        where: { email }
+      const usuarioExistente = await prisma.usuario.findFirst({
+        where: { 
+          OR: [{email}, {cpf}]
+         }
 
       })
 
