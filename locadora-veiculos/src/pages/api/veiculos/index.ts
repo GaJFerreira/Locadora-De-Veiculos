@@ -1,10 +1,19 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiResponse } from 'next'; // ALTERADO: NextApiRequest removido para dar lugar à nossa interface
 import { PrismaClient } from '@prisma/client';
+import { verificarToken, NextApiRequestComUsuario } from '@/utils/auth'; // ALTERADO: Adicionada a importação do nosso middleware
 
 const prisma = new PrismaClient();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequestComUsuario, res: NextApiResponse) { // ALTERADO: Tipagem do 'req' atualizada
+    
     if (req.method === 'POST') {
+        // ADICIONADO: Bloco para verificar se o usuário tem permissão de ADMIN
+        const { tipoUsuario } = req.usuario as { tipoUsuario: string };
+        if (tipoUsuario !== 'ADMIN') {
+            return res.status(403).json({ error: 'Acesso negado. Apenas administradores podem cadastrar veículos.' });
+        }
+        // FIM DO BLOCO ADICIONADO
+
         const {
             modelo,
             marca,
@@ -61,6 +70,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if(req.method === 'PUT'){
+        // ADICIONADO: Verificação de permissão de ADMIN para atualizar
+        const { tipoUsuario } = req.usuario as { tipoUsuario: string };
+        if (tipoUsuario !== 'ADMIN') {
+            return res.status(403).json({ error: 'Acesso negado. Apenas administradores podem atualizar veículos.' });
+        }
+        // FIM DO BLOCO ADICIONADO
+
         const{
             id,
             modelo,
@@ -101,6 +117,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === 'DELETE') {
+        // ADICIONADO: Verificação de permissão de ADMIN para deletar
+        const { tipoUsuario } = req.usuario as { tipoUsuario: string };
+        if (tipoUsuario !== 'ADMIN') {
+            return res.status(403).json({ error: 'Acesso negado. Apenas administradores podem deletar veículos.' });
+        }
+        // FIM DO BLOCO ADICIONADO
+
         const { id } = req.body;
         if (!id) {
             return res.status(400).json({ error: 'ID do veículo é obrigatório' });
@@ -117,3 +140,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
         
 }
+
+export default verificarToken(handler); // ALTERADO: Exporta o handler protegido pelo middleware
